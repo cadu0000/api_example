@@ -1,94 +1,102 @@
+
 # Mango API
 
-API de exemplo para manipulação de **produtos** e **carrinhos**, integrando com a [FakeStoreAPI](https://fakestoreapi.com/).
+Sample API for managing **products** and **carts**, integrating with the [FakeStoreAPI](https://fakestoreapi.com/).
 
 ---
 
-## Como rodar
+## How to Run
 
-### 1. **Clone o projeto**
+### 1. **Clone the project**
 ```bash
-$ git clone https://github.com/cadu0000/teste_crp_mango.git
+$ git clone [https://github.com/cadu0000/teste_crp_mango.git](https://github.com/cadu0000/teste_crp_mango.git)
+````
+
+### 2\. **Build and run with Docker**
+
+```bash
+$docker build -t fake-store-api .$ docker run -p 3333:3333 fake-store-api
 ```
 
-### 2. **Build e execução com Docker**
-```bash
-$ docker build -t fake-store-api .
-$ docker run -p 3333:3333 fake-store-api
-```
-> A API estará disponível em: [http://localhost:3333](http://localhost:3333)
+> The API will be available at: [http://localhost:3333](https://www.google.com/search?q=http://localhost:3333)
 
----
+-----
 
-## Endpoints Principais
+## Main Endpoints
 
-### Produtos
-- **GET `/products`**
-  - Lista paginada de produtos
-  - Parâmetros: `limit`, `offset`, `sort`
-  - Exemplo: `/products?limit=5&offset=0`
-  - HTTP: 200 
+### Products
 
-### Usuários
-- **GET `/users`**
-  - Lista paginada de usuários
-  - Parâmetros: `limit`, `offset`, `sort`
-  - Exemplo: `/users?limit=5&offset=0`
-  - HTTP: 200  
+  - **GET `/products`**
+      - Paginated list of products
+      - Parameters: `limit`, `offset`, `sort`
+      - Example: `/products?limit=5&offset=0`
+      - HTTP: 200
 
-### Carrinhos
-- **POST `/carts`**
-  - Cria um carrinho para um usuário.
-  - Payload: (Perceba que na documentação está o id, mas não faz sentido o enviar, até porque ele será criado apenas após o POST)
-    ```json
-    {
-      "userId": integer,
-      "products": Product[]
-    }
-    ```
-  - HTTP: 201 Created 
+### Users
 
-- **POST `/carts/any-first-products`**
-  - Cria um carrinho com os N primeiros produtos (Essa será a rota utilzada para a resposta do desafio, sendo a requisição enviada com o parâmetro de limit=3, igual à requisição de exemplo da rota).
-  - Payload
-    ```json
-    {
-      "userId": integer,
-      "products": Product[]
-    }
-    ```
-  - Parâmetros: `limit`
-  - Exemplo: `/carts/any-first-products?limit=3`
-  - HTTP: 201 Created  
----
+  - **GET `/users`**
+      - Paginated list of users
+      - Parameters: `limit`, `offset`, `sort`
+      - Example: `/users?limit=5&offset=0`
+      - HTTP: 200
 
-## Fluxo Interno (Exemplo: POST `/carts`)
+### Carts
 
-1. **Recebe o payload** com `userId` e `products`.
-2. **Busca os produtos** na FakeStoreAPI.
-3. **Seleciona os produtos enviados** (ou os N primeiros, se usar `/any-first-products`).
-4. **Monta o payload** no formato esperado pela FakeStoreAPI.
-5. **Envia o payload** para `https://fakestoreapi.com/carts`.
-6. **Recebe a resposta** da FakeStoreAPI.
-7. **Busca os dados completos dos produtos** para enriquecer a resposta.
-8. **Retorna o carrinho criado** com todos os dados dos produtos.
+  - **POST `/carts`**
 
----
+      - Creates a cart for a user.
+      - Payload: (Note that the official documentation includes an `id`, but it doesn't make sense to send it, as it will only be generated after the POST request)
+        ```json
+        {
+          "userId": integer,
+          "products": Product[]
+        }
+        ```
+      - HTTP: 201 Created
 
-## Resolução da avaliação:
+  - **POST `/carts/any-first-products`**
 
-### Criar um carrinho com os 3 primeiros produtos da [FakeStoreAPI](https://fakestoreapi.com/products)
+      - Creates a cart with the first N products. (This is the route used for the challenge solution, sending the request with the `limit=3` parameter, just like the route's example request).
+      - Payload
+        ```json
+        {
+          "userId": integer,
+          "products": Product[]
+        }
+        ```
+      - Parameters: `limit`
+      - Example: `/carts/any-first-products?limit=3`
+      - HTTP: 201 Created
+
+-----
+
+## Internal Flow (Example: POST `/carts`)
+
+1.  **Receives the payload** with `userId` and `products`.
+2.  **Fetches the products** from FakeStoreAPI.
+3.  **Selects the sent products** (or the first N products, if using `/any-first-products`).
+4.  **Builds the payload** in the format expected by FakeStoreAPI.
+5.  **Sends the payload** to `https://fakestoreapi.com/carts`.
+6.  **Receives the response** from FakeStoreAPI.
+7.  **Fetches full product data** to enrich the response.
+8.  **Returns the created cart** with all the product data included.
+
+-----
+
+## Assessment Solution:
+
+### Create a cart with the first 3 products from [FakeStoreAPI](https://fakestoreapi.com/products)
+
 ```bash
 curl -X POST "http://localhost:3333/carts/any-first-products?limit=3"
 ```
 
----
+-----
 
-## Tecnologias
+## Technologies
 
-- Node.js
-- TypeScript
-- Express
-- Docker
+  - Node.js
+  - TypeScript
+  - Express
+  - Docker
 
----
